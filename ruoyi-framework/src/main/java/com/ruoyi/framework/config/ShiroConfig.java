@@ -258,6 +258,7 @@ public class ShiroConfig
         filterChainDefinitionMap.put("/login", "anon,captchaValidate");
         filterChainDefinitionMap.put("/public/**", "anon");
         filterChainDefinitionMap.put("/profile/public/**", "anon");
+        filterChainDefinitionMap.put("/profile/avatar/**", "anon");
         // 注册相关
         filterChainDefinitionMap.put("/user/register", "anon");
         filterChainDefinitionMap.put("/register", "anon,captchaValidate");

@@ -14,6 +14,9 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.framework.shiro.realm.UserRealm;
 import com.ruoyi.system.domain.SysUser;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * shiro 工具类
@@ -47,6 +50,12 @@ public class ShiroUtils
             BeanUtils.copyBeanProp(user, obj);
         }
         return user;
+    }
+
+    public static String getServerH(HttpServletRequest request){
+        String remoteHost = request.getRemoteHost();
+        String host = ""+ request.getServerPort();
+        return remoteHost+host;
     }
 
     public static UserInfo getNormalUser() throws NoUserException {
