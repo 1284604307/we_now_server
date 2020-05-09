@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('文章管理列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>索引：</label>
+                                <input type="text" name="id"/>
+                            </li>
+                            <li>
+                                <label>标题：</label>
+                                <input type="text" name="title"/>
+                            </li>
+                            <li>
+                                <label>简述：</label>
+                                <input type="text" name="prefix"/>
+                            </li>
+                            <li>
+                                <label>内容：</label>
+                                <input type="text" name="content"/>
+                            </li>
+                            <li class="select-time">
+                                <label>发布时间：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginPublishtime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endPublishtime]"/>
+                            </li>
+                            <li class="select-time">
+                                <label>创建时间：</label>
+                                <input type="text" class="time-input" id="startTime1"  placeholder="开始时间" name="params[beginCreatetime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime1" placeholder="结束时间" name="params[endCreatetime]"/>
+                            </li>
+                            <li>
+                                <label>链接：</label>
+                                <input type="text" name="url"/>
+                            </li>
+                            <li>
+                                <label>类型：</label>
+                                <select name="type" th:with="type=${@dict.getType('article_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>外链：</label>
+                                <input type="text" name="link"/>
+                            </li>
+                            <li>
+                                <label>缩略展示图：</label>
+                                <input type="text" name="envelopePic"/>
+                            </li>
+                            <li>
+                                <label>标签：</label>
+                                <input type="text" name="tags"/>
+                            </li>
+                            <li>
+                                <label>查看人数：</label>
+                                <input type="text" name="visible"/>
+                            </li>
+                            <li>
+                                <label>喜欢数：</label>
+                                <input type="text" name="likecount"/>
+                            </li>
+                            <li>
+                                <label>评论数：</label>
+                                <input type="text" name="commentcount"/>
+                            </li>
+                            <li>
+                                <label>是否置顶：</label>
+                                <select name="top" th:with="type=${@dict.getType('yes_no')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>用户ID：</label>
+                                <input type="text" name="userid"/>
+                            </li>
+                            <li>
+                                <label>话题ID：</label>
+                                <input type="text" name="topicId"/>
+                            </li>
+                            <li>
+                                <label>校园ID：</label>
+                                <input type="text" name="schoolId"/>
+                            </li>
+                            <li>
+                                <label>是否原创：</label>
+                                <select name="original" th:with="type=${@dict.getType('yes_no')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>自定义json：</label>
+                                <input type="text" name="extra"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="app:articles:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="app:articles:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="app:articles:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="app:articles:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('app:articles:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('app:articles:remove')}]];
+        var typeDatas = [[${@dict.getType('article_type')}]];
+        var topDatas = [[${@dict.getType('yes_no')}]];
+        var originalDatas = [[${@dict.getType('yes_no')}]];
+        var prefix = ctx + "app/articles";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "文章管理",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'id', 
+                    title: '索引',
+                    visible: false
+                },
+                {
+                    field: 'title', 
+                    title: '标题'
+                },
+                {
+                    field: 'prefix', 
+                    title: '简述'
+                },
+                {
+                    field: 'content', 
+                    title: '内容'
+                },
+                {
+                    field: 'publishtime', 
+                    title: '发布时间'
+                },
+                {
+                    field: 'createtime', 
+                    title: '创建时间'
+                },
+                {
+                    field: 'url', 
+                    title: '链接'
+                },
+                {
+                    field: 'type', 
+                    title: '类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(typeDatas, value);
+                    }
+                },
+                {
+                    field: 'link', 
+                    title: '外链'
+                },
+                {
+                    field: 'envelopePic', 
+                    title: '缩略展示图'
+                },
+                {
+                    field: 'tags', 
+                    title: '标签'
+                },
+                {
+                    field: 'visible', 
+                    title: '查看人数'
+                },
+                {
+                    field: 'likecount', 
+                    title: '喜欢数'
+                },
+                {
+                    field: 'commentcount', 
+                    title: '评论数'
+                },
+                {
+                    field: 'top', 
+                    title: '是否置顶',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(topDatas, value);
+                    }
+                },
+                {
+                    field: 'userid', 
+                    title: '用户ID'
+                },
+                {
+                    field: 'topicId', 
+                    title: '话题ID'
+                },
+                {
+                    field: 'schoolId', 
+                    title: '校园ID'
+                },
+                {
+                    field: 'original', 
+                    title: '是否原创',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(originalDatas, value);
+                    }
+                },
+                {
+                    field: 'extra', 
+                    title: '自定义json'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

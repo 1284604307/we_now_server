@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TopicsMapper">
+    
+    <resultMap type="Topics" id="TopicsResult">
+        <result property="id"    column="id"    />
+        <result property="topic"    column="topic"    />
+        <result property="desc"    column="desc"    />
+        <result property="url"    column="url"    />
+        <result property="type"    column="type"    />
+        <result property="titile"    column="titile"    />
+        <result property="subtitle"    column="subtitle"    />
+        <result property="fansCount"    column="fans_count"    />
+        <result property="visible"    column="visible"    />
+        <result property="top"    column="top"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="niceTime"    column="nice_time"    />
+        <result property="extra"    column="extra"    />
+    </resultMap>
+
+    <sql id="selectTopicsVo">
+        select id, topic, desc, url, type, titile, subtitle, fans_count, visible, top, create_time, nice_time, extra from topics
+    </sql>
+
+    <select id="selectTopicsList" parameterType="Topics" resultMap="TopicsResult">
+        <include refid="selectTopicsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="topic != null  and topic != ''"> and topic = #{topic}</if>
+            <if test="desc != null  and desc != ''"> and desc = #{desc}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="titile != null  and titile != ''"> and titile = #{titile}</if>
+            <if test="subtitle != null  and subtitle != ''"> and subtitle = #{subtitle}</if>
+            <if test="fansCount != null "> and fans_count = #{fansCount}</if>
+            <if test="visible != null  and visible != ''"> and visible = #{visible}</if>
+            <if test="top != null "> and top = #{top}</if>
+            <if test="niceTime != null "> and nice_time = #{niceTime}</if>
+            <if test="extra != null  and extra != ''"> and extra = #{extra}</if>
+        </where>
+    </select>
+    
+    <select id="selectTopicsById" parameterType="Long" resultMap="TopicsResult">
+        <include refid="selectTopicsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTopics" parameterType="Topics" useGeneratedKeys="true" keyProperty="id">
+        insert into topics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="topic != null  and topic != ''">topic,</if>
+            <if test="desc != null  and desc != ''">desc,</if>
+            <if test="url != null  and url != ''">url,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="titile != null  and titile != ''">titile,</if>
+            <if test="subtitle != null  and subtitle != ''">subtitle,</if>
+            <if test="fansCount != null ">fans_count,</if>
+            <if test="visible != null  and visible != ''">visible,</if>
+            <if test="top != null ">top,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="niceTime != null ">nice_time,</if>
+            <if test="extra != null  and extra != ''">extra,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="topic != null  and topic != ''">#{topic},</if>
+            <if test="desc != null  and desc != ''">#{desc},</if>
+            <if test="url != null  and url != ''">#{url},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="titile != null  and titile != ''">#{titile},</if>
+            <if test="subtitle != null  and subtitle != ''">#{subtitle},</if>
+            <if test="fansCount != null ">#{fansCount},</if>
+            <if test="visible != null  and visible != ''">#{visible},</if>
+            <if test="top != null ">#{top},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="niceTime != null ">#{niceTime},</if>
+            <if test="extra != null  and extra != ''">#{extra},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTopics" parameterType="Topics">
+        update topics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="topic != null  and topic != ''">topic = #{topic},</if>
+            <if test="desc != null  and desc != ''">desc = #{desc},</if>
+            <if test="url != null  and url != ''">url = #{url},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="titile != null  and titile != ''">titile = #{titile},</if>
+            <if test="subtitle != null  and subtitle != ''">subtitle = #{subtitle},</if>
+            <if test="fansCount != null ">fans_count = #{fansCount},</if>
+            <if test="visible != null  and visible != ''">visible = #{visible},</if>
+            <if test="top != null ">top = #{top},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="niceTime != null ">nice_time = #{niceTime},</if>
+            <if test="extra != null  and extra != ''">extra = #{extra},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTopicsById" parameterType="Long">
+        delete from topics where id = #{id}
+    </delete>
+
+    <delete id="deleteTopicsByIds" parameterType="String">
+        delete from topics where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

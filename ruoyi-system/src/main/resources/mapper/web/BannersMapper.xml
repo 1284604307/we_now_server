@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BannersMapper">
+    
+    <resultMap type="Banners" id="BannersResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="url"    column="url"    />
+        <result property="type"    column="type"    />
+        <result property="description"    column="description"    />
+        <result property="path"    column="path"    />
+        <result property="articleId"    column="article_id"    />
+        <result property="author"    column="author"    />
+        <result property="dropId"    column="drop_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="reviewer"    column="reviewer"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectBannersVo">
+        select id, title, content, url, type, description, path, article_id, author, drop_id, create_time, reviewer, status from banners
+    </sql>
+
+    <select id="selectBannersList" parameterType="Banners" resultMap="BannersResult">
+        <include refid="selectBannersVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="description != null  and description != ''"> and description like concat('%', #{description}, '%')</if>
+            <if test="path != null  and path != ''"> and path = #{path}</if>
+            <if test="articleId != null "> and article_id = #{articleId}</if>
+            <if test="author != null  and author != ''"> and author = #{author}</if>
+            <if test="dropId != null "> and drop_id = #{dropId}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="reviewer != null  and reviewer != ''"> and reviewer = #{reviewer}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectBannersById" parameterType="Long" resultMap="BannersResult">
+        <include refid="selectBannersVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBanners" parameterType="Banners" useGeneratedKeys="true" keyProperty="id">
+        insert into banners
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="url != null  and url != ''">url,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="path != null  and path != ''">path,</if>
+            <if test="articleId != null ">article_id,</if>
+            <if test="author != null  and author != ''">author,</if>
+            <if test="dropId != null ">drop_id,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="reviewer != null  and reviewer != ''">reviewer,</if>
+            <if test="status != null  and status != ''">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="url != null  and url != ''">#{url},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="description != null  and description != ''">#{description},</if>
+            <if test="path != null  and path != ''">#{path},</if>
+            <if test="articleId != null ">#{articleId},</if>
+            <if test="author != null  and author != ''">#{author},</if>
+            <if test="dropId != null ">#{dropId},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="reviewer != null  and reviewer != ''">#{reviewer},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBanners" parameterType="Banners">
+        update banners
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="url != null  and url != ''">url = #{url},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="path != null  and path != ''">path = #{path},</if>
+            <if test="articleId != null ">article_id = #{articleId},</if>
+            <if test="author != null  and author != ''">author = #{author},</if>
+            <if test="dropId != null ">drop_id = #{dropId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="reviewer != null  and reviewer != ''">reviewer = #{reviewer},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBannersById" parameterType="Long">
+        delete from banners where id = #{id}
+    </delete>
+
+    <delete id="deleteBannersByIds" parameterType="String">
+        delete from banners where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

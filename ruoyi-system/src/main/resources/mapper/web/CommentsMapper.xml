@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CommentsMapper">
+    
+    <resultMap type="Comments" id="CommentsResult">
+        <result property="cid"    column="cid"    />
+        <result property="content"    column="content"    />
+        <result property="createtime"    column="createTime"    />
+        <result property="articleId"    column="article_id"    />
+        <result property="pid"    column="pid"    />
+        <result property="fromid"    column="fromId"    />
+        <result property="toid"    column="toId"    />
+        <result property="likecount"    column="likeCount"    />
+    </resultMap>
+
+    <sql id="selectCommentsVo">
+        select cid, content, createTime, article_id, pid, fromId, toId, likeCount from comments
+    </sql>
+
+    <select id="selectCommentsList" parameterType="Comments" resultMap="CommentsResult">
+        <include refid="selectCommentsVo"/>
+        <where>  
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="createtime != null "> and createTime = #{createtime}</if>
+            <if test="articleId != null  and articleId != ''"> and article_id = #{articleId}</if>
+            <if test="pid != null "> and pid = #{pid}</if>
+            <if test="fromid != null "> and fromId = #{fromid}</if>
+            <if test="toid != null "> and toId = #{toid}</if>
+            <if test="likecount != null "> and likeCount = #{likecount}</if>
+        </where>
+    </select>
+    
+    <select id="selectCommentsById" parameterType="Long" resultMap="CommentsResult">
+        <include refid="selectCommentsVo"/>
+        where cid = #{cid}
+    </select>
+        
+    <insert id="insertComments" parameterType="Comments" useGeneratedKeys="true" keyProperty="cid">
+        insert into comments
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="content != null  and content != ''">content,</if>
+            <if test="createtime != null ">createTime,</if>
+            <if test="articleId != null  and articleId != ''">article_id,</if>
+            <if test="pid != null ">pid,</if>
+            <if test="fromid != null ">fromId,</if>
+            <if test="toid != null ">toId,</if>
+            <if test="likecount != null ">likeCount,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="createtime != null ">#{createtime},</if>
+            <if test="articleId != null  and articleId != ''">#{articleId},</if>
+            <if test="pid != null ">#{pid},</if>
+            <if test="fromid != null ">#{fromid},</if>
+            <if test="toid != null ">#{toid},</if>
+            <if test="likecount != null ">#{likecount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComments" parameterType="Comments">
+        update comments
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="createtime != null ">createTime = #{createtime},</if>
+            <if test="articleId != null  and articleId != ''">article_id = #{articleId},</if>
+            <if test="pid != null ">pid = #{pid},</if>
+            <if test="fromid != null ">fromId = #{fromid},</if>
+            <if test="toid != null ">toId = #{toid},</if>
+            <if test="likecount != null ">likeCount = #{likecount},</if>
+        </trim>
+        where cid = #{cid}
+    </update>
+
+    <delete id="deleteCommentsById" parameterType="Long">
+        delete from comments where cid = #{cid}
+    </delete>
+
+    <delete id="deleteCommentsByIds" parameterType="String">
+        delete from comments where cid in 
+        <foreach item="cid" collection="array" open="(" separator="," close=")">
+            #{cid}
+        </foreach>
+    </delete>
+    
+</mapper>

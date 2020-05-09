@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ArticlesMapper">
+    
+    <resultMap type="Articles" id="ArticlesResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="prefix"    column="prefix"    />
+        <result property="content"    column="content"    />
+        <result property="publishtime"    column="publishTime"    />
+        <result property="createtime"    column="createTime"    />
+        <result property="url"    column="url"    />
+        <result property="type"    column="type"    />
+        <result property="link"    column="link"    />
+        <result property="envelopePic"    column="envelope_pic"    />
+        <result property="tags"    column="tags"    />
+        <result property="visible"    column="visible"    />
+        <result property="likecount"    column="likeCount"    />
+        <result property="commentcount"    column="commentCount"    />
+        <result property="top"    column="top"    />
+        <result property="userid"    column="userId"    />
+        <result property="topicId"    column="topic_id"    />
+        <result property="schoolId"    column="school_id"    />
+        <result property="original"    column="original"    />
+        <result property="extra"    column="extra"    />
+    </resultMap>
+
+    <sql id="selectArticlesVo">
+        select id, title, prefix, content, publishTime, createTime, url, type, link, envelope_pic, tags, visible,  likeCount, commentCount, top, userId, topic_id, school_id, original, extra from articles
+    </sql>
+
+    <select id="selectArticlesList" parameterType="Articles" resultMap="ArticlesResult">
+        <include refid="selectArticlesVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="prefix != null  and prefix != ''"> and prefix = #{prefix}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="publishtime != null "> and publishTime = #{publishtime}</if>
+            <if test="createtime != null "> and createTime = #{createtime}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="link != null  and link != ''"> and link = #{link}</if>
+            <if test="envelopePic != null  and envelopePic != ''"> and envelope_pic = #{envelopePic}</if>
+            <if test="tags != null  and tags != ''"> and tags = #{tags}</if>
+            <if test="visible != null "> and visible = #{visible}</if>
+            <if test="likecount != null "> and likeCount = #{likecount}</if>
+            <if test="commentcount != null "> and commentCount = #{commentcount}</if>
+            <if test="top != null "> and top = #{top}</if>
+            <if test="userid != null "> and userId = #{userid}</if>
+            <if test="topicId != null "> and topic_id = #{topicId}</if>
+            <if test="schoolId != null "> and school_id = #{schoolId}</if>
+            <if test="original != null "> and original = #{original}</if>
+            <if test="extra != null  and extra != ''"> and extra = #{extra}</if>
+        </where>
+    </select>
+    
+    <select id="selectArticlesById" parameterType="Long" resultMap="ArticlesResult">
+        <include refid="selectArticlesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertArticles" parameterType="Articles" useGeneratedKeys="true" keyProperty="id">
+        insert into articles
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="prefix != null  and prefix != ''">prefix,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="publishtime != null ">publishTime,</if>
+            <if test="createtime != null ">createTime,</if>
+            <if test="url != null  and url != ''">url,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="link != null  and link != ''">link,</if>
+            <if test="envelopePic != null  and envelopePic != ''">envelope_pic,</if>
+            <if test="tags != null  and tags != ''">tags,</if>
+            <if test="visible != null ">visible,</if>
+            <if test="likecount != null ">likeCount,</if>
+            <if test="commentcount != null ">commentCount,</if>
+            <if test="top != null ">top,</if>
+            <if test="userid != null ">userId,</if>
+            <if test="topicId != null ">topic_id,</if>
+            <if test="schoolId != null ">school_id,</if>
+            <if test="original != null ">original,</if>
+            <if test="extra != null  and extra != ''">extra,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="prefix != null  and prefix != ''">#{prefix},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="publishtime != null ">#{publishtime},</if>
+            <if test="createtime != null ">#{createtime},</if>
+            <if test="url != null  and url != ''">#{url},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="link != null  and link != ''">#{link},</if>
+            <if test="envelopePic != null  and envelopePic != ''">#{envelopePic},</if>
+            <if test="tags != null  and tags != ''">#{tags},</if>
+            <if test="visible != null ">#{visible},</if>
+            <if test="collect != null  and collect != ''">#{collect},</if>
+            <if test="fresh != null  and fresh != ''">#{fresh},</if>
+            <if test="like != null  and like != ''">#{like},</if>
+            <if test="likecount != null ">#{likecount},</if>
+            <if test="commentcount != null ">#{commentcount},</if>
+            <if test="top != null ">#{top},</if>
+            <if test="userid != null ">#{userid},</if>
+            <if test="topicId != null ">#{topicId},</if>
+            <if test="schoolId != null ">#{schoolId},</if>
+            <if test="original != null ">#{original},</if>
+            <if test="extra != null  and extra != ''">#{extra},</if>
+         </trim>
+    </insert>
+
+    <update id="updateArticles" parameterType="Articles">
+        update articles
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="prefix != null  and prefix != ''">prefix = #{prefix},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="publishtime != null ">publishTime = #{publishtime},</if>
+            <if test="createtime != null ">createTime = #{createtime},</if>
+            <if test="url != null  and url != ''">url = #{url},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="link != null  and link != ''">link = #{link},</if>
+            <if test="envelopePic != null  and envelopePic != ''">envelope_pic = #{envelopePic},</if>
+            <if test="tags != null  and tags != ''">tags = #{tags},</if>
+            <if test="visible != null ">visible = #{visible},</if>
+            <if test="collect != null  and collect != ''">collect = #{collect},</if>
+            <if test="fresh != null  and fresh != ''">fresh = #{fresh},</if>
+            <if test="like != null  and like != ''">like = #{like},</if>
+            <if test="likecount != null ">likeCount = #{likecount},</if>
+            <if test="commentcount != null ">commentCount = #{commentcount},</if>
+            <if test="top != null ">top = #{top},</if>
+            <if test="userid != null ">userId = #{userid},</if>
+            <if test="topicId != null ">topic_id = #{topicId},</if>
+            <if test="schoolId != null ">school_id = #{schoolId},</if>
+            <if test="original != null ">original = #{original},</if>
+            <if test="extra != null  and extra != ''">extra = #{extra},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteArticlesById" parameterType="Long">
+        delete from articles where id = #{id}
+    </delete>
+
+    <delete id="deleteArticlesByIds" parameterType="String">
+        delete from articles where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
