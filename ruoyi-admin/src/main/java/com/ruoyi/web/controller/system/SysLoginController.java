@@ -5,9 +5,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.app.service.NormalUserService;
 import com.ruoyi.common.core.domain.AuthType;
+import com.ruoyi.framework.shiro.realm.UserTencentToken;
 import com.ruoyi.framework.shiro.realm.UserTicketToken;
 import com.ruoyi.framework.shiro.service.SysTicketService;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.app.UserInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -37,6 +39,38 @@ public class SysLoginController extends BaseController
     NormalUserService normalUserService;
     @Autowired
     SysTicketService ticketService;
+
+
+    @PostMapping("/login/qq")
+    @ResponseBody
+    public AjaxResult login(String openid,String access_token)
+    {
+        UserTencentToken token = new UserTencentToken(openid,access_token);
+        Subject subject = SecurityUtils.getSubject();
+        try
+        {
+            subject.login(token);
+            SysUser user = ShiroUtils.getSysUser();
+            UserInfo userInfo = normalUserService.getUserInfoById(ShiroUtils.getUserId());
+            subject.getSession().setAttribute("user",userInfo);
+
+            if(getRequest().getHeader(AuthType.name)!=null&&getRequest().getHeader(AuthType.name).equals(AuthType.APP_MATH.name())){
+                // 如果是APP端登录，则设置ticket并返回
+                String tikcet = ticketService.newTicket(user.getLoginName());
+                return AjaxResult.success("登录成功",tikcet);
+            }
+            return success();
+        }
+        catch (AuthenticationException e)
+        {
+            String msg = "用户或密码错误";
+            if (StringUtils.isNotEmpty(e.getMessage()))
+            {
+                msg = e.getMessage();
+            }
+            return error(msg);
+        }
+    }
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response)

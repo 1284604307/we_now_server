@@ -113,11 +113,45 @@ public class SysUser extends BaseEntity
     private Long fansCount;
     private Long lv;
 
+    /** WX Openid */
+    @JsonIgnore  //返回时排除掉这个字段
+    private String wxOpenid;
+    /** QQ Openid */
+    @JsonIgnore  //返回时排除掉这个字段
+    private String tencentOpenid;
+    /** WB Openid */
+    @JsonIgnore  //返回时排除掉这个字段
+    private String wbOpenid;
+
     private Long schoolId;
 
     public SysUser()
     {
 
+    }
+
+    public String getWxOpenid() {
+        return wxOpenid;
+    }
+
+    public void setWxOpenid(String wxOpenid) {
+        this.wxOpenid = wxOpenid;
+    }
+
+    public String getTencentOpenid() {
+        return tencentOpenid;
+    }
+
+    public void setTencentOpenid(String tencentOpenid) {
+        this.tencentOpenid = tencentOpenid;
+    }
+
+    public String getWbOpenid() {
+        return wbOpenid;
+    }
+
+    public void setWbOpenid(String wbOpenid) {
+        this.wbOpenid = wbOpenid;
     }
 
     public SysUser(Long userId)

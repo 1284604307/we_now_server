@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import java.util.List;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.SysUserRole;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * 用户 业务层
@@ -204,4 +205,11 @@ public interface ISysUserService
      * @return 结果
      */
     public int changeStatus(SysUser user);
+
+    /**
+     * 通过QQ openid查询用户
+     * @param openid
+     * @return
+     */
+    SysUser selectUserByTencentOpenId(String openid);
 }

@@ -1,10 +1,11 @@
-package com.ruoyi.app.service;
+package com.ruoyi.framework.shiro.service;
 
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
 import cn.jmessage.api.JMessageClient;
 import cn.jmessage.api.common.model.RegisterInfo;
 import cn.jmessage.api.common.model.UserPayload;
+import com.ruoyi.framework.web.domain.server.Sys;
 import com.ruoyi.system.domain.SysUser;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,16 @@ public class JpushService {
         builder.setUsername(username);
         builder.setPassword(password);
         builder.setAvatar("http://i2.hdslb.com/bfs/face/819cda3f7ecc37b295638fc73b50251f016ef7d3.gif");
+        RegisterInfo info = builder.build();
+        client.registerUsers(new RegisterInfo[]{info});
+    }
+
+    public void registerUser(SysUser user) throws APIConnectionException, APIRequestException {
+        RegisterInfo.Builder builder = RegisterInfo.newBuilder();
+        builder.setUsername(user.getLoginName());
+        builder.setPassword(user.getPassword());
+        builder.setNickname(user.getUserName());
+        builder.setAvatar(user.getAvatar()==null?"http://i2.hdslb.com/bfs/face/819cda3f7ecc37b295638fc73b50251f016ef7d3.gif":user.getAvatar());
         RegisterInfo info = builder.build();
         client.registerUsers(new RegisterInfo[]{info});
     }

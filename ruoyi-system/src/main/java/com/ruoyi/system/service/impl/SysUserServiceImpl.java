@@ -517,4 +517,9 @@ public class SysUserServiceImpl implements ISysUserService
     {
         return userMapper.updateUser(user);
     }
+
+    @Override
+    public SysUser selectUserByTencentOpenId(String openid) {
+        return userMapper.selectUserByTencentOpenId(openid);
+    }
 }

@@ -35,6 +35,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="followCount"   column="followCount"  />
 		<result property="fansCount"   column="fansCount"  />
 
+		<result property="tencentOpenid"  column="tencent_openid"       />
+		<result property="wxOpenid"       column="wx_openid"       />
+		<result property="wbOpenid"       column="wb_openid"       />
+
 		<association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
 		<collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
 	</resultMap>
@@ -61,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select  u.user_id, u.dept_id, u.login_name, u.user_name, u.user_type, u.email, u.avatar, u.phonenumber, u.sex, u.password, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_time, u.remark,u.ticket,
        		    d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
        		    r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status,
-       		    likeCount, collectCount, followCount, fansCount, lv
+       		    likeCount, collectCount, followCount, fansCount, lv , tencent_openid
 		from sys_user u
 			 left join sys_dept d on u.dept_id = d.dept_id
 			 left join sys_user_role ur on u.user_id = ur.user_id
@@ -211,6 +215,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="status != null and status != ''">status,</if>
 		<if test="createBy != null and createBy != ''">create_by,</if>
 		<if test="remark != null and remark != ''">remark,</if>
+		<if test="tencentOpenid != null and tencentOpenid != ''">tencent_openid,</if>
 		create_time
 		)values(
 		<if test="userId != null and userId != ''">#{userId},</if>
@@ -227,6 +232,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="status != null and status != ''">#{status},</if>
 		<if test="createBy != null and createBy != ''">#{createBy},</if>
 		<if test="remark != null and remark != ''">#{remark},</if>
+		<if test="tencentOpenid != null and tencentOpenid != ''">#{tencentOpenid},</if>
+
 		sysdate()
 		)
 	</insert>
@@ -237,4 +244,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 where login_name = #{arg1}
 	</insert>
 
-</mapper> 
+	<select id="selectUserByTencentOpenId" parameterType="String" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.tencent_openid = #{openid}
+	</select>
+
+</mapper>

@@ -1,6 +1,6 @@
 package com.ruoyi.app.controller;
 
-import com.ruoyi.app.service.JpushService;
+import com.ruoyi.framework.shiro.service.JpushService;
 import com.ruoyi.app.service.NormalUserService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.config.Global;
@@ -13,17 +13,13 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.framework.shiro.service.SysPasswordService;
 import com.ruoyi.framework.util.ShiroUtils;
-import com.ruoyi.framework.web.domain.server.Sys;
 import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.domain.app.UserInfo;
 import com.ruoyi.system.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresUser;
-import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -82,11 +78,6 @@ public class NormalUserController {
         {
             return error("注册用户'" + user.getLoginName() + "'失败，登录账号已存在");
         }
-//        else if (UserConstants.USER_EMAIL_NOT_UNIQUE.equals(userService.checkEmailUnique(user)))
-//        {
-//            return error("注册用户'" + user.getLoginName() + "'失败，邮箱账号已存在");
-//        }
-
         user.setUserName(username);
         user.setSalt(ShiroUtils.randomSalt());
         user.setPassword(passwordService.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));

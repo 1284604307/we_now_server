@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import java.util.List;
 import com.ruoyi.system.domain.SysUser;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 /**
@@ -130,4 +131,6 @@ public interface SysUserMapper
      * @return
      */
     public void updateTicket( String ticket, String username);
+
+    public SysUser selectUserByTencentOpenId(String openid);
 }

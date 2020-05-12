@@ -62,12 +62,12 @@ public class LogoutFilter extends org.apache.shiro.web.filter.authc.LogoutFilter
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception
     {
-
         if(ticketService==null)
             ticketService = SpringBeanFactoryUtils.getBean(SysTicketService.class);
 
+        SysUser user = ShiroUtils.getSysUser();
+
         boolean isApp = false;
-        String username = ShiroUtils.getLoginName();
 
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 
@@ -81,7 +81,6 @@ public class LogoutFilter extends org.apache.shiro.web.filter.authc.LogoutFilter
             String redirectUrl = getRedirectUrl(request, response, subject);
             try
             {
-                SysUser user = ShiroUtils.getSysUser();
                 if (StringUtils.isNotNull(user))
                 {
                     String loginName = user.getLoginName();
@@ -99,8 +98,12 @@ public class LogoutFilter extends org.apache.shiro.web.filter.authc.LogoutFilter
             }
 
             if(isApp){
-                if(username!=null)
-                    ticketService.clearTicket(username);
+                try {
+                    ticketService.clearTicket(user.getLoginName());
+                }catch (Exception e){
+                    log.error("未清除ticket，用户未登录", e);
+                }
+
                 PrintWriter out;
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application/json; charset=utf-8");
