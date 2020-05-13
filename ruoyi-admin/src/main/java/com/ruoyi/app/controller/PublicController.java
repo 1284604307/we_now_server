@@ -1,9 +1,7 @@
 package com.ruoyi.app.controller;
 
 import com.ruoyi.common.core.domain.AjaxResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,14 +12,17 @@ import javax.servlet.http.HttpServletRequest;
  * @email 17564500258@163.com
  * @Date 2020/4/16 17:33
  */
-@RestController
 @RequestMapping("/public")
 public class PublicController {
 
     @GetMapping("/welcome")
+    @ResponseBody
     AjaxResult welcome(){
         return AjaxResult.success("OK");
     }
 
-
+    @GetMapping("/newArticle")
+    String newArticle(){
+        return "app/creation/article";
+    }
 }

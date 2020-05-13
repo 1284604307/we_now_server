@@ -13,6 +13,8 @@ we-now:
   # 获取ip地址开关
   addressEnabled: true
 
+
+
 # 开发环境配置
 server:
   # 服务器的HTTP端口，默认为80
@@ -69,6 +71,8 @@ spring:
     restart:
       # 热部署开关
       enabled: true
+    livereload:
+      enabled: true
 
 # MyBatis
 mybatis:
@@ -113,7 +117,7 @@ shiro:
     maxAge: 30
   session:
     # Session超时时间，-1代表永不过期（默认30分钟）
-    expireTime: 30
+    expireTime: 60
     # 同步session到数据库的周期（默认1分钟）
     dbSyncPeriod: 1
     # 相隔多久检查一次session的有效性，默认就是10分钟

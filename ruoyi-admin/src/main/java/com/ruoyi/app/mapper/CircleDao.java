@@ -62,11 +62,11 @@ public interface CircleDao {
     Article getCircle(@Param("id")long id);
 
     @ResultMap("articleMap")
-    @Select("select * from articles where top = 'true' and type = '文章' ")
+    @Select("select * from articles where top = true and type = '文章' ")
     List<Article> getTopArticles();
 
     @ResultMap("articleMap")
-    @Select("select * from articles where top = 'false' and type = '文章' order by id desc ")
+    @Select("select * from articles where top = false and type = '文章' order by id desc ")
     List<Article> getNormalArticles();
 
 

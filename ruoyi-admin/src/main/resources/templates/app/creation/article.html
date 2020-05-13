@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('创作')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: summernote-css" />
+    <th:block th:include="include :: jasny-bootstrap-css" />
+</head>
+<body class="gray-bg">
+
+<form  class="wrapper wrapper-content" id="controller"  onsubmit="return false;">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <div class="select-list">
+                <label class="col-sm-2 control-label">
+                    <label class="toggle-switch switch-solid">
+                        是否原创：
+                        <input type="checkbox" id="status" checked=""> <span></span>
+                    </label>
+                </label>
+                <label class="col-sm-2 control-label">
+                    <label class="toggle-switch switch-solid">
+                        申请置顶：
+                        <input type="checkbox" id="status"> <span></span>
+                    </label>
+                </label>
+
+
+                <button class="btn btn-primary  btn-default" onclick="publish()" type="submit">现在发布</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 search-collapse" >
+            <div style="margin-top: 10px;">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">文章标题</div>
+                        <input type="text" required class="form-control" name="title" id="title" maxlength="64" placeholder="在此输入您的标题">
+                        <div class="input-group-addon">0/64</div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 10px;">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon" >文章作者</div>
+                        <input type="text" required class="form-control" name="author" id="author" maxlength="12"  placeholder="作者">
+                        <div class="input-group-addon">0/12</div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 10px;">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">跳转外链<span style="color:red">*</span>
+                            <div class="checkbox check-box inline-block" style="margin-top: -10px;padding-top:0;margin-bottom: 22px;">
+                                <input type="checkbox" id="hasLink" value="hasLink">
+                            </div>
+                        </div>
+                        <input type="text" name="link"  class="form-control" id="link" placeholder="设置外链意味着您的文章内容不会被显示,页面将直接展示外链内容">
+                    </div>
+                </div>
+            </div>
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>创作我的新推文</h5>
+<!--                    <button id="edit" class="btn btn-primary btn-xs m-l-sm" onclick="edit()" type="button">编辑</button>-->
+                    <button id="save" class="btn btn-primary  btn-xs" onclick="save()" type="button">保存到本地</button>
+                </div>
+                <div class="ibox-content no-padding">
+                    <div class="summernote" style="min-height: 300px;">
+
+                    </div>
+                </div>
+            </div>
+
+<!--            ex 图片上传-->
+            <div >
+                <h3>封面和摘要</h3>
+                <div class="form-group">
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;"></div>
+                        <div>
+                            <span class="btn btn-white btn-file"><span class="fileinput-new">选择图片</span><span class="fileinput-exists">更改</span><input type="file"></span>
+                            <a href="#" class="btn btn-white fileinput-exists" data-dismiss="fileinput">清除</a>
+                        </div>
+                    </div>
+
+                    <span class="inline" id="">
+                        <textarea id="prefix" class="fileinput-preview thumbnail" style="width:300px;height: 152px;margin: 10px;" placeholder="选填，摘要会在订阅号消息、转发链接等文章外的场景显露，帮助读者快速了解内容，如不填写则默认抓取正文前54字"  name="prefix" maxlength="120"></textarea>
+                        <em class="" style="margin-left: 260px;">0/120</em>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</form>
+
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: summernote-js" />
+<th:block th:include="include :: jasny-bootstrap-js" />
+<script>
+    $(document).ready(function () {
+        $('.summernote').summernote({
+            lang: 'zh-CN',
+            minHeight:"300px",
+            callbacks: {
+                onChange: function(contents, $editable) {
+                    console.log('onChange:', contents, $editable);
+                    // save()
+                }
+            }
+        });
+
+        var oldHtml = localStorage.getItem("we_now_article");
+        console.log(oldHtml);
+        $('.summernote').summernote('pasteHTML', oldHtml);
+
+
+        window.addEventListener("keydown", function(e) {
+            //可以判断是不是mac，如果是mac,ctrl变为花键
+            //event.preventDefault() 方法阻止元素发生默认的行为。
+            if (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+                e.preventDefault();
+                save();
+                console.log("已保存")
+            }
+        }, false);
+
+
+        $("#controller").validate(
+            {
+                rules: {
+                    title: {
+                        required: true,
+                        minlength: 6,
+                    },
+                    author: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 12
+                    },
+                    link: {
+                        required: "#hasLink:checked",
+                        url:true
+                    }
+                },
+                messages: {
+                    title: {
+                        required: "标题不能为空    ",
+                        minlength: "标题长度应大于6    ",
+                    },
+                    author: {
+                        required: "作者不能为空    ",
+                        minlength: "作者长度必须大于2   ",
+                        maxlength: "作者长度必须小于12    ",
+                    },
+                    link: {
+                        required: "您选择了外链类型，因此外链不能为空！",
+                        url: "您输入的内容不符合外链规则！!"
+                    }
+                },
+                submitHandler: function(form) {
+                    var content = $('.summernote').summernote('code');
+                    console.log(content);
+                    $.ajax({
+                        url:"/app/creation",
+                        type:"POST",
+                        data:{
+                            title:form.title.value.trim(),
+                            author:form.author.value.trim(),
+                            link:form.hasLink.checked?form.link.value.trim():null,
+                            content: content,
+                            prefix:form.prefix.value?.trim(),
+                            envelopePic:null
+                        },
+                        success:function (res) {
+                            console.log(res);
+                            alert("ok")
+                        },
+                        error:function(){
+
+                        }
+                    });
+                    return false;
+                }
+            }
+        );
+    });
+
+    function publish(){
+        // $("#hasLink")
+        // $("#link")
+        // $("#prefix")
+        // $("#content")
+        console.log("测试")
+
+    }
+
+    // ex 从预览返回编辑模式
+    var edit = function () {
+        $("#eg").addClass("no-padding");
+        $('.summernote').summernote({
+            lang: 'zh-CN',
+            focus: true
+        });
+    };
+
+    // ex 预览
+    var preview = function () {
+        $("#eg").removeClass("no-padding");
+        $('.summernote').summernote('destroy');
+    };
+    // ex 保存到浏览器存储内
+    var save = function () {
+        var aHTML = $('.summernote').summernote('code');
+        localStorage.setItem("we_now_article",aHTML);
+    };
+</script>
+
+</body>
+</html>

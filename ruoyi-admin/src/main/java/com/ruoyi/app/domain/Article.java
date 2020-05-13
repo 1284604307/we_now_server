@@ -53,6 +53,9 @@ public class Article {
     long school_id;
     UserInfo user;
 
+    // desc 扩展属性
+    String extra;
+
     public void setUrl(Object url) {
         System.out.println(url);
         if (url instanceof List)
