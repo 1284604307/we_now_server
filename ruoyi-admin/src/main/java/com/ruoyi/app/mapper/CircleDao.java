@@ -21,6 +21,7 @@ import java.util.List;
 @Component("circleDao")
 public interface CircleDao {
 
+    static String articleSelect =  " id,title,prefix,createTime,url,type,link,envelope_pic,visible,fresh,likeCount,commentCount,top,userId,school_id,original,extra ";
 
     @Insert("insert into articles(content,createTime,url,type,userId) values(" +
             "#{c.content},Now(),#{c.url, jdbcType=VARCHAR, typeHandler= com.ruoyi.app.mapper.ArrayTypeHandler}," +
@@ -50,7 +51,7 @@ public interface CircleDao {
     List<Article> getAll();
 
     @ResultMap("articleMap")
-    @Select("select * from articles where type = '动态' and top = true and original = true")
+    @Select("select * from articles where type = '动态' and top = 1 and original = 1")
     List<Article> getOriginalHotsAll();
 
     @ResultMap("articleMap")
@@ -61,15 +62,12 @@ public interface CircleDao {
     @Select("select * from articles where id = #{id}")
     Article getCircle(@Param("id")long id);
 
-    @ResultMap("articleMap")
-    @Select("select * from articles where top = true and type = '文章' ")
+    @Select("select "+articleSelect+" from articles where top = 1 and type = '文章' ")
     List<Article> getTopArticles();
 
     @ResultMap("articleMap")
-    @Select("select * from articles where top = false and type = '文章' order by id desc ")
+    @Select("select "+articleSelect+" from articles where top = 0 and type = '文章' order by id desc ")
     List<Article> getNormalArticles();
-
-
 
     /**
      *  以下为 Comment Dao
@@ -146,6 +144,12 @@ public interface CircleDao {
      * banner
      */
     @Select("select * from banners where status = '投放中'")
+    @Results(id="bannerMap", value={
+            @Result(column="article_id", property="articleId", jdbcType=JdbcType.INTEGER, id=true),
+            @Result(column="drop_id", property="dropId", jdbcType=JdbcType.INTEGER, id=true),
+            @Result(column="create_time", property="createTime", jdbcType=JdbcType.DATE, id=true),
+    }
+    )
     List<Banner> getNewBanners();
 
     @Select("select * from topics ${where} ")

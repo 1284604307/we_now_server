@@ -52,22 +52,5 @@ public class ArticleController {
         return AjaxResult.success();
     }
 
-    private List<Article> getTestData(){
-        List<Article> articles = new ArrayList<>();
-        Article article = new Article();
-        article.setContent("测试");
-        article.setId(99);
-        article.setTitle("测试标题");
-        article.setLink("");
-        article.setEnvelopePic("");
-        article.setPrefix("");
-        article.setTags(new ArrayList<>());
-
-        for (int i = 0; i < 10; i++) {
-            articles.add(article);
-        }
-        return articles;
-    }
-
 
 }
