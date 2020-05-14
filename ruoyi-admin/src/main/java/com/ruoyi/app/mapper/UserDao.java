@@ -26,4 +26,6 @@ public interface UserDao {
     @Insert("insert into user() values()")
     void registerUser(SysUser user);
 
+    @Select("select user_id,user_name,avatar,email,likeCount,collectCount,lv from sys_user  where login_name = #{userId}")
+    UserInfo getUserInfoByLoginName(String loginName);
 }

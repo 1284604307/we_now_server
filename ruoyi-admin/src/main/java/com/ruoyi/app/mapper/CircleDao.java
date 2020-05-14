@@ -59,6 +59,10 @@ public interface CircleDao {
     List<Article> getAllBySchool(@Param("sid")long schoolId);
 
     @ResultMap("articleMap")
+    @Select("select * from articles where type = '动态' and topic_id = #{sid} and top = false")
+    List<Article> getAllByTopicId(@Param("sid")long topicId);
+
+    @ResultMap("articleMap")
     @Select("select * from articles where id = #{id}")
     Article getCircle(@Param("id")long id);
 
@@ -163,4 +167,7 @@ public interface CircleDao {
 
     @Select("select * from topics where id = #{id}")
     Topic queryTopic(@Param("id") long id);
+
+    @Select("select * from articles where type = '动态' and topic_id = #{tid} and top = 1")
+    List<Article> getAllByTopicTop(@Param("tid") Integer topicId);
 }

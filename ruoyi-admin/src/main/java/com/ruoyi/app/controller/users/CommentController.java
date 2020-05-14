@@ -2,6 +2,7 @@ package com.ruoyi.app.controller.users;
 
 import com.ruoyi.app.domain.Comment;
 import com.ruoyi.app.service.CommentService;
+import com.ruoyi.app.service.NormalUserService;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.framework.util.ShiroUtils;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +23,8 @@ public class CommentController {
 
     @Autowired
     CommentService commentService;
+    @Autowired
+    NormalUserService userService;
 
     @ApiOperation("新增一个评论")
     @PostMapping("/{circleId}/{pid}/{toId}")

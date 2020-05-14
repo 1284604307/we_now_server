@@ -21,4 +21,8 @@ public class NormalUserService {
     public UserInfo getUserInfoById(Long userId){
         return userDao.getUserInfoById(userId);
     }
+
+    public UserInfo getUserInfoByLoginName(String loginName){
+        return userDao.getUserInfoByLoginName(loginName);
+    }
 }

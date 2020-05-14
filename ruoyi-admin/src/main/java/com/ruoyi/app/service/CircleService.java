@@ -48,6 +48,11 @@ public class CircleService {
         return (Page<Article>)circleDao.getAllBySchool(schoolId);
     }
 
+    public Page<Article> getCirclesByTopic(int page, long topicId){
+        PageHelper.startPage(page,10);
+        return (Page<Article>)circleDao.getAllByTopicId(topicId);
+    }
+
     public Article getCircle(long id) throws NullPointerException{
         Article circle = circleDao.getCircle(id);
         circle.setUser(userService.getUserInfoById(circle.getUserId()));
@@ -64,5 +69,9 @@ public class CircleService {
             return circleDao.delCircle(circleId,userId);
         }
         return i;
+    }
+
+    public List<Article> getCirclesByTopicTop(Integer topicId) {
+        return circleDao.getAllByTopicTop(topicId);
     }
 }

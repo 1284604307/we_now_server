@@ -49,8 +49,8 @@ public class Article {
     boolean original;
 
     long userId;
-    long top_id;
-    long school_id;
+    long topicId;
+    long schoolId;
     UserInfo user;
 
     // desc 扩展属性
