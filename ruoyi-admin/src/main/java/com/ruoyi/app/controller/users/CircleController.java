@@ -106,6 +106,7 @@ public class CircleController {
     }
 
 
+
     @ApiOperation("获取推荐动态")
     @GetMapping({"/hots","/hots/{page}"})
     public AjaxResult hotsCircles(@PathVariable(required = false) Integer page){
@@ -161,8 +162,11 @@ public class CircleController {
     public AjaxResult circle(@PathVariable("circleId") int circleId){
         Article circle = circleService.getCircle(circleId);
         Page<Comment> circleCommentsPage = commentService.getComments(circleId,0);
-        circle.setLike(articleActionService.isLike(circleId));
-        circle.setCollect(articleActionService.isCollect(circleId));
+        boolean login = SecurityUtils.getSubject().isAuthenticated()||SecurityUtils.getSubject().isRemembered();
+        if(login){
+            circle.setLike(articleActionService.isLike(circleId));
+            circle.setCollect(articleActionService.isCollect(circleId));
+        }
         circle.setComments(circleCommentsPage.getResult());
         return AjaxResult.success(circle);
     }
