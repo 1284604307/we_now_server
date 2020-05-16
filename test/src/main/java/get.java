@@ -3,6 +3,10 @@ import com.ruoyi.common.utils.http.HttpUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author ming
@@ -15,9 +19,19 @@ public class get {
 
     public static void main(String[] args) {
 
-        String s = "http://whois.pconline.com.cn/ip.jsp";
-        s  = HttpUtils.sendPost(s, "ip=" + "112.37.127.255");
-        System.out.println(s);
+        Pattern p = Pattern.compile("#[\\s\\S]+?#");
+        Matcher m = p.matcher("#test#aasd# asd 撒asd  阿斯顿#asdf#");
+        List<String> stringList = new ArrayList<String>();
+        while (m.find()) {
+            System.out.println(m.group(0));
+            stringList.add(m.group(0));
+        }
+        System.out.println(stringList.toString());
+        ;
+        System.out.println(String.join(",",stringList));
+//        String s = "http://whois.pconline.com.cn/ip.jsp";
+//        s  = HttpUtils.sendPost(s, "ip=" + "112.37.127.255");
+//        System.out.println(s);
     }
     public static String getResultsStr(Class origin) throws UnsupportedEncodingException {
         StringBuilder stringBuilder = new StringBuilder();
