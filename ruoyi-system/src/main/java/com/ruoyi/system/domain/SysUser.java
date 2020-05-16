@@ -60,7 +60,7 @@ public class SysUser extends BaseEntity
 
     /** 用户性别 */
     @Excel(name = "用户性别", readConverterExp = "0=男,1=女,2=未知")
-    private String sex;
+    private int sex;
 
     /** 用户头像 */
     private String avatar;
@@ -112,6 +112,12 @@ public class SysUser extends BaseEntity
     private Long followCount;
     private Long fansCount;
     private Long lv;
+
+    /** 生日 */
+    @Excel(name = "生日", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Type.EXPORT)
+    private Date birthday;
+
+    private String signature;
 
     /** WX Openid */
     @JsonIgnore  //返回时排除掉这个字段
@@ -265,12 +271,12 @@ public class SysUser extends BaseEntity
         this.phonenumber = phonenumber;
     }
 
-    public String getSex()
+    public int getSex()
     {
         return sex;
     }
 
-    public void setSex(String sex)
+    public void setSex(int sex)
     {
         this.sex = sex;
     }

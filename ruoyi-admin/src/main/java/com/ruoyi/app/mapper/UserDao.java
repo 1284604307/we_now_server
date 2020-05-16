@@ -28,4 +28,8 @@ public interface UserDao {
 
     @Select("select user_id,user_name,avatar,email,likeCount,collectCount,lv from sys_user  where login_name = #{userId}")
     UserInfo getUserInfoByLoginName(String loginName);
+
+    @Update("update sys_user set user_name = #{user.userName},sex = #{user.sex}," +
+            "birthday=#{user.birthday},email=#{user.email},phonenumber=#{user.phonenumber},signature=#{user.signature}")
+    void updateUserInfo(SysUser user);
 }

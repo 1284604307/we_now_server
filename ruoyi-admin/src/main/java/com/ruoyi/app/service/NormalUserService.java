@@ -1,6 +1,7 @@
 package com.ruoyi.app.service;
 
 import com.ruoyi.app.mapper.UserDao;
+import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.domain.app.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,5 +25,9 @@ public class NormalUserService {
 
     public UserInfo getUserInfoByLoginName(String loginName){
         return userDao.getUserInfoByLoginName(loginName);
+    }
+
+    public void updateUserInfo(SysUser user) {
+        userDao.updateUserInfo(user);
     }
 }

@@ -1,5 +1,7 @@
 package com.ruoyi.app.controller;
 
+import cn.jiguang.common.resp.APIConnectionException;
+import cn.jiguang.common.resp.APIRequestException;
 import com.ruoyi.framework.shiro.service.JpushService;
 import com.ruoyi.app.service.NormalUserService;
 import com.ruoyi.common.annotation.Log;
@@ -105,8 +107,15 @@ public class NormalUserController {
     @PostMapping
     @ApiOperation("更新用户信息")
     @ApiImplicitParam(name = "userInfo", value = "用户信息", required = true, paramType = "path")
-    AjaxResult updateInfo(){
-        return error("功能开发中");
+    AjaxResult updateInfo(SysUser user){
+        normalUserService.updateUserInfo(user);
+        try {
+            jpushService.updateUserInfo(user);
+        } catch (APIConnectionException | APIRequestException e) {
+            e.printStackTrace();
+            return success("极光同步错误");
+        }
+        return success();
     }
 
     @PostMapping("/upload")

@@ -49,4 +49,12 @@ public class JpushService {
     }
 
 
+    public void updateUserInfo(SysUser user) throws APIConnectionException, APIRequestException {
+        UserPayload.Builder builder = UserPayload.newBuilder();
+        builder.setNickname(user.getUserName());
+        builder.setGender(user.getSex());
+        builder.setSignature(user.getSignature());
+        builder.setBirthday(user.getBirthday().toString());
+        client.updateUserInfo(user.getLoginName(),builder.build());
+    }
 }
