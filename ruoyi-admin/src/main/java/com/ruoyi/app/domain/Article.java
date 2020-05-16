@@ -14,6 +14,7 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class Article {
@@ -54,7 +55,7 @@ public class Article {
     UserInfo user;
 
     // desc 扩展属性
-    String extra;
+    JSONObject extra;
 
     public void setUrl(Object url) {
         System.out.println(url);

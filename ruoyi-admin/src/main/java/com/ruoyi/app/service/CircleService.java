@@ -1,5 +1,6 @@
 package com.ruoyi.app.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.ruoyi.app.domain.Article;
@@ -10,7 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author ming
@@ -29,11 +33,30 @@ public class CircleService {
     NormalUserService userService;
 
     public void createNewCircle(Article circle){
-        circleDao.insertNew(circle);
+        circle.setExtra(new JSONObject());
+        List topics = topicMatcher(circle.getContent());
+        circle.getExtra().put("topics",topics);
+        int circleId = circleDao.insertNew(circle);
+        // 关联话题
+        if(topics.size()>0)
+            circleDao.topicArticleRelation(topics,circleId);
+
+    }
+
+    private List<String> topicMatcher(String str){
+        List<String> strings = new ArrayList<>();
+        Pattern p = Pattern.compile("#[\\s\\S]+?#");
+        Matcher m = p.matcher(str);
+
+        while (m.find()) {
+            strings.add(m.group(0));
+        }
+        return strings;
     }
 
     public Page<Article> getCircles(int page){
         PageHelper.startPage(page,10);
+        PageHelper.orderBy("createTime desc");
         return (Page<Article>)circleDao.getAll();
     }
 
@@ -45,6 +68,7 @@ public class CircleService {
 
     public Page<Article> getCirclesBySchool(int page, long schoolId){
         PageHelper.startPage(page,10);
+        PageHelper.orderBy("createTime desc");
         return (Page<Article>)circleDao.getAllBySchool(schoolId);
     }
 

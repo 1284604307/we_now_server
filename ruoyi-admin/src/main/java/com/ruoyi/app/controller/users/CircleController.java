@@ -19,8 +19,12 @@ import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author ming
@@ -58,9 +62,13 @@ public class CircleController {
         circle.setUserId(user.getUserId());
         circle.setCreateTime(new Date());
         circle.setType("动态");
+
+
         circleService.createNewCircle(circle);
+
         return AjaxResult.success();
     }
+
 
     @ApiOperation("删除一个动态，接受一个地址参数 circleId")
     @DeleteMapping("/del/{circleId}")

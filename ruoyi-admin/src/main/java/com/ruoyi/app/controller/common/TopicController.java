@@ -5,6 +5,7 @@ import com.ruoyi.app.domain.Topic;
 import com.ruoyi.app.service.TopicService;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.PageAjaxResult;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,10 +42,27 @@ public class TopicController {
         return PageAjaxResult.success((Page)niceTopics);
     }
 
-    @GetMapping("/info/{id}")
+    @GetMapping("/info/id/{id}")
     public AjaxResult getTopic(@PathVariable("id")long id){
         Topic topic = topicService.getTopic(id);
         return AjaxResult.success(topic);
+    }
+
+    @GetMapping("/info/name/{name}")
+    public AjaxResult getTopicByName(@PathVariable("name")String name){
+        Topic topic = topicService.getTopicByName(name);
+        return AjaxResult.success(topic);
+    }
+
+    @ApiOperation("搜索话题")
+    @GetMapping({"/search/{topic}","/search/"})
+    public PageAjaxResult search(@PathVariable(value = "topic",required = false) String topic){
+        if(topic!=null)
+            topic = topic.trim();
+        else
+            topic = "";
+        List<Topic> topics = topicService.searchTopics(topic);
+        return PageAjaxResult.success(topics);
     }
 
 }

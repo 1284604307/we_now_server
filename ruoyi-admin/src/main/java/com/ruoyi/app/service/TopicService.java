@@ -39,4 +39,13 @@ public class TopicService {
     public Topic getTopic(long id){
         return circleDao.queryTopic(id);
     }
+
+    public List<Topic> searchTopics(String topic) {
+        PageHelper.startPage(0,20);
+        return  circleDao.searchTopics(topic);
+    }
+
+    public Topic getTopicByName(String name) {
+        return circleDao.queryTopicByName(name);
+    }
 }

@@ -23,10 +23,11 @@ public interface CircleDao {
 
     static String articleSelect =  " id,title,prefix,createTime,url,type,link,envelope_pic,visible,fresh,likeCount,commentCount,top,userId,school_id,original,extra ";
 
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     @Insert("insert into articles(content,createTime,url,type,userId) values(" +
             "#{c.content},Now(),#{c.url, jdbcType=VARCHAR, typeHandler= com.ruoyi.app.mapper.ArrayTypeHandler}," +
             "#{c.type},#{c.userId})")
-    void insertNew(@Param("c") Article circle);
+    int insertNew(@Param("c") Article circle);
 
     @Select("select * from articles where type = '动态'")
     @Results(id="articleMap", value={
@@ -58,9 +59,6 @@ public interface CircleDao {
     @Select("select * from articles where type = '动态' and school_id = #{sid}")
     List<Article> getAllBySchool(@Param("sid")long schoolId);
 
-    @ResultMap("articleMap")
-    @Select("select * from articles where type = '动态' and topic_id = #{sid} and top = false")
-    List<Article> getAllByTopicId(@Param("sid")long topicId);
 
     @ResultMap("articleMap")
     @Select("select * from articles where id = #{id}")
@@ -168,6 +166,29 @@ public interface CircleDao {
     @Select("select * from topics where id = #{id}")
     Topic queryTopic(@Param("id") long id);
 
-    @Select("select * from articles where type = '动态' and topic_id = #{tid} and top = 1")
+    // 话题置顶动态
+    @Select("select * from articles where id = (select article_id from topic_article where topic = (select topic from topics where id = #{tid} and top = true ))")
     List<Article> getAllByTopicTop(@Param("tid") Integer topicId);
+
+    // 话题相关动态
+    @ResultMap("articleMap")
+//    @Select("select * from articles where type = '动态' and topic_id = #{sid} and top = false")
+    @Select("select * from articles where id = (select article_id from topic_article where topic = (select topic from topics where id = #{tid} and top = false ))")
+    List<Article> getAllByTopicId(@Param("tid")long topicId);
+
+    @Select("select * from topics where topic like '%${topic}%'")
+    List<Topic> searchTopics(@Param("topic") String topic);
+
+    @Insert({
+            "<script>",
+            "insert into topic_article(topic,article_id) values ",
+            "<foreach collection='topics' item='topic' index='index' separator=','>",
+            "(#{topic},#{id})",
+            "</foreach>",
+            "</script>"
+    })
+    void topicArticleRelation(@Param("topics") List topics, @Param("id")int circleId);
+
+    @Select("select * from topics where topic = #{name} ")
+    Topic queryTopicByName(String name);
 }
