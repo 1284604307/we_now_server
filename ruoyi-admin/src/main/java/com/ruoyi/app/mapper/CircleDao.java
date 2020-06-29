@@ -121,10 +121,10 @@ public interface CircleDao {
     @Select("select * from article_collect where user_id = #{uid}")
     List<Integer> getAllCollect(@Param("uid") long uid);
 
-    @Update("update set commentCount = commentCount+1 where id = #{aid}")
+    @Update("update articles set commentCount = commentCount+1 where id = #{aid}")
     void addCommentCount(@Param("aid") long articleId);
 
-    @Update("update set commentCount = commentCount-1 where id = #{aid}")
+    @Update("update articles set commentCount = commentCount-1 where id = #{aid}")
     void subCommentCount(@Param("aid") long articleId);
 
     @Update("update articles set likeCount = likeCount+1 where id = #{aid}")

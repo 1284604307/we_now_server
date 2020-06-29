@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTopicsVo">
-        select id, topic, desc, url, type, titile, subtitle, fans_count, visible, top, create_time, nice_time, extra from topics
+        select id, topic, `desc`, url, type, titile, subtitle, fans_count, visible, top, create_time, nice_time, extra from topics
     </sql>
 
     <select id="selectTopicsList" parameterType="Topics" resultMap="TopicsResult">
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="id != null "> and id = #{id}</if>
             <if test="topic != null  and topic != ''"> and topic = #{topic}</if>
-            <if test="desc != null  and desc != ''"> and desc = #{desc}</if>
+            <if test="desc != null  and desc != ''"> and `desc` = #{desc}</if>
             <if test="url != null  and url != ''"> and url = #{url}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="titile != null  and titile != ''"> and titile = #{titile}</if>
@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into topics
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="topic != null  and topic != ''">topic,</if>
-            <if test="desc != null  and desc != ''">desc,</if>
+            <if test="desc != null  and desc != ''">`desc`,</if>
             <if test="url != null  and url != ''">url,</if>
             <if test="type != null  and type != ''">type,</if>
             <if test="titile != null  and titile != ''">titile,</if>
@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update topics
         <trim prefix="SET" suffixOverrides=",">
             <if test="topic != null  and topic != ''">topic = #{topic},</if>
-            <if test="desc != null  and desc != ''">desc = #{desc},</if>
+            <if test="desc != null  and desc != ''">`desc` = #{desc},</if>
             <if test="url != null  and url != ''">url = #{url},</if>
             <if test="type != null  and type != ''">type = #{type},</if>
             <if test="titile != null  and titile != ''">titile = #{titile},</if>

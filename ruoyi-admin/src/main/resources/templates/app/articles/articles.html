@@ -166,7 +166,13 @@
                 },
                 {
                     field: 'content', 
-                    title: '内容'
+                    title: '内容',
+                    formatter: function(value, row, index) {
+                        value = value.replace(/<video[\s\S]*>/g,"[视频]");
+                        value = value.replace(/<img[\s\S]*>/g,"[图片]");
+                        return "<div style='width:80px;height:80px;overflow: hidden'>"+value+"</div>"
+                    }
+
                 },
                 {
                     field: 'publishtime', 
@@ -178,7 +184,19 @@
                 },
                 {
                     field: 'url', 
-                    title: '链接'
+                    title: '链接',
+                    maxWidth:80,
+                    formatter: function(value, row, index) {
+                        console.log(value);
+                        try {
+                            var arr = JSON.parse(value);
+                            if(arr.length>0)
+                                return "<img src='"+arr[0]+"' width='60' height='60'/>";
+                        }catch(e){
+
+                        }
+                         return  "";
+                    }
                 },
                 {
                     field: 'type', 
@@ -189,11 +207,21 @@
                 },
                 {
                     field: 'link', 
-                    title: '外链'
+                    title: '外链',
+                    formatter: function(value, row, index) {
+                        if(value)
+                        return "<a  target='_blank' href='"+value+"'>点我跳转</a>";
+                        else return "";
+                    }
                 },
                 {
                     field: 'envelopePic', 
-                    title: '缩略展示图'
+                    title: '缩略展示图',
+                    formatter: function(value, row, index) {
+                        if(value)
+                        return "<img src='"+value+"' width='60' height='60'/>";
+                        else return "";
+                    }
                 },
                 {
                     field: 'tags', 
@@ -228,7 +256,7 @@
                 },
                 {
                     field: 'schoolId', 
-                    title: '校园ID'
+                    title: '校园ID',
                 },
                 {
                     field: 'original', 
